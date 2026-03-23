@@ -402,7 +402,6 @@ const css = `
 
   .mb-alert { background: #fef9f0; border: 1px solid #f0d090; border-radius: 8px; padding: 10px 14px; font-size: 0.77rem; color: #8a6020; margin-bottom: 1rem; }
 
-  /* CART */
   .cart-title { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 600; color: #1a1a1a; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid #ece8e0; }
   .cart-empty { font-size: 0.76rem; color: #bbb; text-align: center; padding: 2rem 0; font-weight: 300; line-height: 1.6; }
   .cart-cat-label { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #c9a96e; margin-top: 1rem; margin-bottom: 0.4rem; }
@@ -412,7 +411,6 @@ const css = `
   .cart-notice { background: #f5f0e8; border-radius: 8px; padding: 10px 12px; font-size: 0.72rem; color: #8a7050; margin-top: 1rem; line-height: 1.55; }
   .cart-meta { font-size: 0.67rem; color: #bbb; margin-top: 0.75rem; line-height: 1.5; }
 
-  /* QUOTE */
   .quote-event-details { background: #f5f0e8; border-radius: 10px; padding: 1rem 1.2rem; margin-bottom: 1.4rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
   .qed-label { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: #aaa; font-weight: 500; margin-bottom: 2px; }
   .qed-val { color: #1a1a1a; font-weight: 500; font-size: 0.84rem; }
@@ -432,6 +430,9 @@ const css = `
 
   .send-form { background: #fff; border: 1px solid #ece8e0; border-radius: 12px; padding: 1.4rem; margin-bottom: 1.5rem; }
   .send-form-title { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 600; margin-bottom: 1rem; color: #1a1a1a; }
+
+  .mb-sending { opacity: 0.6; pointer-events: none; }
+  .mb-send-error { background: #fdf0f0; border: 1px solid #f5c6c6; border-radius: 8px; padding: 10px 14px; font-size: 0.77rem; color: #c0392b; margin-bottom: 1rem; }
 
   .success-screen { text-align: center; padding: 4rem 2rem; animation: cardIn 0.5s ease; }
   .success-check { width: 62px; height: 62px; border-radius: 50%; background: #3d4a3d; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; font-size: 1.5rem; color: #8bc48b; }
@@ -553,7 +554,7 @@ function CartSidebar() {
 }
 
 // ─────────────────────────────────────────────
-// MENU STEP — reusable for starters / mains / desserts
+// MENU STEP — reusable
 // ─────────────────────────────────────────────
 function MenuStep({ category, title, subtitle, items }) {
   const { state, dispatch } = useMenu();
@@ -955,6 +956,8 @@ function EventDetailsStep() {
 function QuoteStep() {
   const { state, dispatch } = useMenu();
   const [showSend, setShowSend] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState("");
   const [sendErrors, setSendErrors] = useState({});
 
   const cats = [
@@ -975,13 +978,40 @@ function QuoteStep() {
     return e;
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     const e = validateSend();
     if (Object.keys(e).length > 0) {
       setSendErrors(e);
       return;
     }
-    dispatch({ type: "SEND_QUOTE" });
+
+    setSending(true);
+    setSendError("");
+
+    try {
+      const res = await fetch("/api/send-quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contactName: state.contactName,
+          contactEmail: state.contactEmail,
+          contactPhone: state.contactPhone,
+          guests: state.guests,
+          eventDate: state.eventDate,
+          notes: state.notes,
+          selections: state.selections,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Server error");
+      dispatch({ type: "SEND_QUOTE" });
+    } catch (err) {
+      setSendError(
+        "Something went wrong sending your quote. Please try again or email us directly.",
+      );
+    } finally {
+      setSending(false);
+    }
   };
 
   if (state.quoteSent) {
@@ -1104,8 +1134,12 @@ function QuoteStep() {
           </button>
         </div>
       ) : (
-        <div className="send-form" style={{ animation: "cardIn 0.3s ease" }}>
+        <div
+          className={`send-form ${sending ? "mb-sending" : ""}`}
+          style={{ animation: "cardIn 0.3s ease" }}
+        >
           <div className="send-form-title">Your Contact Details</div>
+          {sendError && <div className="mb-send-error">{sendError}</div>}
           <div className="mb-form">
             <div>
               <label className="mb-label">Your Name *</label>
@@ -1167,11 +1201,16 @@ function QuoteStep() {
             <button
               className="mb-btn-secondary"
               onClick={() => setShowSend(false)}
+              disabled={sending}
             >
               ← Back
             </button>
-            <button className="mb-btn-gold" onClick={handleSend}>
-              Send Quote Request →
+            <button
+              className="mb-btn-gold"
+              onClick={handleSend}
+              disabled={sending}
+            >
+              {sending ? "Sending..." : "Send Quote Request →"}
             </button>
           </div>
         </div>
