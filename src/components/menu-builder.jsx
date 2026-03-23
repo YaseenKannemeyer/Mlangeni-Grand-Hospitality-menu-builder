@@ -323,7 +323,7 @@ const css = `
   .mb-root { font-family: 'DM Sans', sans-serif; min-height: 100vh; background: #faf9f6; color: #1a1a1a; }
 
   .mb-header { background: #1a1a1a; color: #f5f0e8; padding: 1.4rem 2rem; display: flex; align-items: center; justify-content: space-between; }
-  .mb-wordmark { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 600; letter-spacing: 0.05em; color: #c9a96e; }
+  .mb-wordmark { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 600; letter-spacing: 0.05em; color: #c9a96e; }
   .mb-header-sub { font-size: 0.72rem; color: #a0998a; letter-spacing: 0.12em; text-transform: uppercase; }
 
   .mb-progress { background: #1a1a1a; padding: 0 2rem 1.4rem; display: flex; align-items: center; overflow-x: auto; }
@@ -538,8 +538,8 @@ function CartSidebar() {
       )}
       {hasItems && (
         <div className="cart-notice">
-          Our team will prepare a full itemised price quote based on your
-          selections and guest count.
+          Mlangeni Grand Hospitality will prepare a full itemised price quote
+          based on your selections and guest count.
         </div>
       )}
       {state.guests && (
@@ -1021,8 +1021,8 @@ function QuoteStep() {
         <div className="success-title">Quote Request Sent</div>
         <div className="success-sub">
           Thank you, {state.contactName}. Your menu request has been received.
-          Our catering specialists will prepare a full price quote and be in
-          touch within 24 hours.
+          The Mlangeni Grand Hospitality team will prepare a full price quote
+          and be in touch within 24 hours.
         </div>
         <button
           className="mb-btn-gold"
@@ -1078,8 +1078,8 @@ function QuoteStep() {
         <div className="quote-notice-icon">i</div>
         <div className="quote-notice-text">
           <strong>Pricing will be provided by our team.</strong> Once you submit
-          this request, our catering specialists will review your selections and
-          send a full itemised quote tailored to your event.
+          this request, Mlangeni Grand Hospitality will review your selections
+          and send a full itemised quote tailored to your event.
         </div>
       </div>
 
@@ -1299,7 +1299,7 @@ export default function MenuBuilder() {
       <style>{css}</style>
       <div className="mb-root">
         <div className="mb-header">
-          <div className="mb-wordmark">Élara Catering</div>
+          <div className="mb-wordmark">Mlangeni Grand Hospitality</div>
           <div className="mb-header-sub">Menu Builder</div>
         </div>
         <ProgressBar />

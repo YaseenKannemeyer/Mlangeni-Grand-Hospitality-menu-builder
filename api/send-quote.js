@@ -71,7 +71,7 @@ export default async function handler(req, res) {
       from: "onboarding@resend.dev", // ← change to your verified Resend domain
       to: "yaseenkannemeyer@gmail.com", // ← your inbox
       replyTo: contactEmail, // ← reply goes straight to the client
-      subject: `New Quote Request — ${contactName} | ${guests} guests | ${formattedDate}`,
+      subject: `MGH Quote Request — ${contactName} | ${guests} guests | ${formattedDate}`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -80,7 +80,7 @@ export default async function handler(req, res) {
 
             <!-- Header -->
             <div style="background: #1a1a1a; padding: 24px 32px;">
-              <h1 style="color: #c9a96e; font-size: 22px; margin: 0; letter-spacing: 0.05em;">Élara Catering</h1>
+              <h1 style="color: #c9a96e; font-size: 22px; margin: 0; letter-spacing: 0.05em;">Mlangeni Grand Hospitality</h1>
               <p style="color: #a0998a; font-size: 11px; margin: 4px 0 0; letter-spacing: 0.12em; text-transform: uppercase;">New Menu Quote Request</p>
             </div>
 
@@ -113,7 +113,7 @@ export default async function handler(req, res) {
             <!-- Footer -->
             <div style="background: #f5f0e8; padding: 16px 32px; border-top: 1px solid #ece8e0;">
               <p style="font-size: 12px; color: #a0998a; margin: 0;">
-                This request was submitted via the Élara Catering Menu Builder.
+                This request was submitted via the Mlangeni Grand Hospitality Menu Builder.
                 Reply directly to this email to respond to ${contactName}.
               </p>
             </div>
